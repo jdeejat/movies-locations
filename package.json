@@ -1,0 +1,23 @@
+{
+  "name": "nodeapp",
+  "version": "1.0.0",
+  "description": "This will be a node.js app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdeejat/nodeApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdeejat/nodeApp/issues"
+  },
+  "homepage": "https://github.com/jdeejat/nodeApp#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "mongoose": "^6.5.1"
+  }
+}
