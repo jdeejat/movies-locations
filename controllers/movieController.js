@@ -1,16 +1,7 @@
-const mongoose = require('mongoose');
-
-// MONGOOSE CONFIG
-const mov = mongoose.createConnection(
-  `mongodb+srv://testUser:ZPbNqpukVqhZRS2@cluster0.4ioj6pf.mongodb.net/sample_mflix`
-);
-// movies
-const movieSchema = new mongoose.Schema({
-  year: Number,
-});
-const Movie = mov.model('Movie', movieSchema);
+const Movie = require('../models/movieModel');
 
 // MOVIES HANDLERS
+
 // send  10 movies to the client
 exports.getTenMovies = (req, res) => {
   Movie.find({})
@@ -35,4 +26,11 @@ exports.getMoviesByYear = (req, res) => {
       if (err) return res.status(500).send(err);
       res.status(200).send(movies);
     });
+};
+
+// MIDDLEWARE
+
+exports.checkYear = (req, res, next, year) => {
+  if (year.length !== 4) return res.status(400).send('Invalid year');
+  next();
 };
