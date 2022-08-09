@@ -5,9 +5,16 @@ const movieController = require('../controllers/movieController');
 
 const router = express.Router();
 
-router.param('year', movieController.checkYear);
+router
+  .route('/top-100-21')
+  .get(movieController.aliasTop21, movieController.getMovies);
 
-router.route('/').get(movieController.getTenMovies);
+router
+  .route('/')
+  .get(movieController.getMovies)
+  .post(movieController.createMovie);
+
+router.param('year', movieController.checkYear);
 router.route('/:year').get(movieController.getMoviesByYear);
 
 module.exports = router;
