@@ -1,7 +1,9 @@
 const Movie = require('../models/movieModel');
 const APIfeatures = require('../utils/APIfeatures');
 
+//////////////////////////////////////////////////
 // ALIASES
+//////////////////////////////////////////////////
 
 exports.aliasTop21 = (req, res, next) => {
   req.query.limit = '100';
@@ -11,7 +13,9 @@ exports.aliasTop21 = (req, res, next) => {
   next();
 };
 
+//////////////////////////////////////////////////
 // MOVIES HANDLERS
+//////////////////////////////////////////////////
 
 /*
 // send  10 movies to the client
@@ -79,7 +83,24 @@ exports.getMoviesByYear = (req, res) => {
     });
 };
 
+exports.createMovie = async (req, res) => {
+  try {
+    const newMovie = await Movie.create(req.body);
+    res.status(201).json({
+      status: 'success',
+      data: { newMovie },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};
+
+//////////////////////////////////////////////////
 // MIDDLEWARE
+//////////////////////////////////////////////////
 
 exports.checkYear = (req, res, next, year) => {
   if (year.length !== 4)
@@ -90,15 +111,86 @@ exports.checkYear = (req, res, next, year) => {
   next();
 };
 
-exports.createMovie = async (req, res) => {
+//////////////////////////////////////////////////
+// AGGREGATION QUERY
+//////////////////////////////////////////////////
+
+exports.getMovieStats = async (req, res) => {
   try {
-    const newMovie = await Movie.create(req.body);
-    res.status(201).json({
+    const stats = await Movie.aggregate([
+      {
+        $match: {
+          metacritic: { $gte: 0 },
+          year: { $gte: 0 },
+        },
+      },
+      {
+        $group: {
+          _id: '$type',
+          numOfMovies: { $sum: 1 },
+          avgRuntime: { $avg: '$runtime' },
+          minRuntime: { $min: '$runtime' },
+          maxRuntime: { $max: '$runtime' },
+          avgRating: { $avg: '$metacritic' },
+          minRating: { $min: '$metacritic' },
+          maxRating: { $max: '$metacritic' },
+          minYear: { $min: '$year' },
+          maxYear: { $max: '$year' },
+        },
+      },
+      {
+        $sort: {
+          year: 1,
+        },
+      },
+    ]);
+    res.status(200).json({
       status: 'success',
-      data: { newMovie },
+      data: { stats },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};
+
+exports.getMovieStatsByYear = async (req, res) => {
+  try {
+    const paramYear = req.params.year * 1;
+
+    const stats = await Movie.aggregate([
+      {
+        $match: {
+          year: paramYear,
+          released: {
+            // first half of the year
+            $gte: new Date(`${paramYear}-01-01`),
+            $lte: new Date(`${paramYear}-06-30`),
+          },
+        },
+      },
+      { $unwind: '$countries' },
+      {
+        $group: {
+          _id: { $month: '$released' },
+          numOfMovies: { $sum: 1 },
+          countries: { $addToSet: '$countries' },
+          titles: { $push: '$title' },
+        },
+      },
+      { $sort: { month: 1 } },
+      { $addFields: { month: '$_id' } },
+      { $project: { _id: 0 } },
+    ]);
+
+    res.status(200).json({
+      status: 'success',
+      data: { stats },
+    });
+  } catch (err) {
+    res.status(404).json({
       status: 'error',
       message: err,
     });

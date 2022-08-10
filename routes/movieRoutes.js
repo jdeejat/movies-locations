@@ -9,6 +9,9 @@ router
   .route('/top-100-21')
   .get(movieController.aliasTop21, movieController.getMovies);
 
+router.route('/stats').get(movieController.getMovieStats);
+router.route('/stats/:year').get(movieController.getMovieStatsByYear);
+
 router
   .route('/')
   .get(movieController.getMovies)
