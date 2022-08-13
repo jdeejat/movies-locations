@@ -1,5 +1,10 @@
 const express = require('express');
 const morgan = require('morgan');
+
+// error modules
+const AppError = require('./utils/appErrorClass');
+const errorHandler = require('./controllers/errorController');
+
 // in app modules
 const movieRoutes = require('./routes/movieRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -28,5 +33,15 @@ app.use('/api/v1/movies', movieRoutes);
 app.use('/api/v1/users', userRoutes);
 
 ///////////////////////////////////////
+// error handling
+app.all('*', (req, res, next) => {
+  // res.status(404).json({
+  //   status: 'error',
+  //   message: `Route ${req.originalUrl} not found`,
+  // });
+  next(new AppError(`Route ${req.originalUrl} not found`, 404));
+});
+
+app.use(errorHandler);
 
 module.exports = app;
