@@ -45,6 +45,8 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+/* 
+Moved to authController.js
 exports.createUser = (req, res) => {
   // OPTION1 create user with method on new object
   // const newUser = new User(req.body);
@@ -62,6 +64,7 @@ exports.createUser = (req, res) => {
     });
   });
 };
+*/
 
 ////////////////////////////////////
 // EMAIL route handler

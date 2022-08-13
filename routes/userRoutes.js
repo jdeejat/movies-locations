@@ -1,17 +1,18 @@
 const express = require('express');
 const userController = require('../controllers/userController');
+const authController = require('../controllers/authController');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+router.route('/signup').post(authController.signup);
+router.route('/login').post(authController.login);
+
+router.route('/').get(authController.protect, userController.getAllUsers);
 
 router
   .route('/:email')
-  .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .get(authController.protect, userController.getUser)
+  .patch(authController.protect, userController.updateUser)
+  .delete(authController.protect, userController.deleteUser);
 
 module.exports = router;

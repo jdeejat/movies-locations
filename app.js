@@ -3,7 +3,7 @@ const morgan = require('morgan');
 
 // error modules
 const AppError = require('./utils/appErrorClass');
-const errorHandler = require('./controllers/errorController');
+const errorController = require('./controllers/errorController');
 
 // in app modules
 const movieRoutes = require('./routes/movieRoutes');
@@ -42,6 +42,6 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Route ${req.originalUrl} not found`, 404));
 });
 
-app.use(errorHandler);
+app.use(errorController);
 
 module.exports = app;
