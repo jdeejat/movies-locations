@@ -1,13 +1,18 @@
 const User = require('../models/userModel');
+const catchAsync = require('../utils/asyncCatch');
+const AppError = require('../utils/appErrorClass');
 
 // USER HANDLERS
 
+////////////////////////////////////
 // MAIN route handler
+////////////////////////////////////
+
 /*
 // OPTION 1 get all users using normal callback function 
 exports.getAllUsers = (req, res) => {
   User.find({})
-    .select('name email _id')
+    .select('userName email _id')
     .exec((err, users) => {
       if (err) return res.status(500).send(err);
       res.status(200).send(users);
@@ -16,7 +21,7 @@ exports.getAllUsers = (req, res) => {
 // OPTION 2 get all users using .then()
 exports.getAllUsers = (req, res) => {
   User.find({})
-    .select('name email _id')
+    .select('userName email _id')
     .then((users) => {
       res.status(200).send(users);
     })
@@ -29,7 +34,7 @@ exports.getAllUsers = (req, res) => {
 // OPTION 3 get all users using async/await
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('name email _id');
+    const users = await User.find({}).select('userName email _id');
     res.status(200).json({
       status: 'success',
       results: users.length,
@@ -67,10 +72,12 @@ exports.createUser = (req, res) => {
 */
 
 ////////////////////////////////////
-// EMAIL route handler
+// :EMAIL route handler
+////////////////////////////////////
+
 exports.getUser = (req, res) => {
   User.findOne({ email: req.params.email })
-    .select('name email _id')
+    .select('userName email _id')
     .exec((err, user) => {
       if (err)
         return res.status(500).json({
@@ -86,7 +93,39 @@ exports.getUser = (req, res) => {
     });
 };
 
+// update user userName and email
+exports.updateMe = catchAsync(async (req, res, next) => {
+  // 0) check if user sent password data
+  if (req.body.password || req.body.passwordConfirm) {
+    return next(
+      new AppError(
+        'This route is not for password updates. Please use /updateMyPassword',
+        400
+      )
+    );
+  }
+
+  // filter out unwanted fields from the request body
+  const filteredBody = { userName: req.body.userName, email: req.body.email };
+
+  // 1) get user from collection by id
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+    new: true,
+    runValidators: true,
+  });
+  // 4) send response
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
+  });
+});
+
+// ADMIN only
 exports.updateUser = async (req, res) => {
+  // to prevent updating password with this method
+  delete req.body.password;
   // patch method
   try {
     const user = await User.findOneAndUpdate(
