@@ -7,10 +7,68 @@ const catchAsync = require('../utils/asyncCatch');
 const AppError = require('../utils/appErrorClass');
 const sendEmail = require('../utils/email');
 
+////////////////////////////////////
+// HELPER functions
+////////////////////////////////////
+
+// SIGN token
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+
+// SEND token and set cookie
+const createAndSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') {
+    cookieOptions.secure = true;
+  }
+
+  res.cookie('jwt', token, cookieOptions);
+
+  if (statusCode === 201) {
+    res.status(statusCode).json({
+      status: 'success',
+      token,
+      data: {
+        user,
+      },
+    });
+  } else {
+    res.status(statusCode).json({
+      status: 'success',
+      token,
+    });
+  }
+};
+
+////////////////////////////////////
+// MIDDLEWARE permission
+////////////////////////////////////
+
+// Restrict access to certain roles
+exports.restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    // roles is an array of roles ['admin', 'lead-guide']
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+
+////////////////////////////////////
+// MIDDLEWARE signup and login
+////////////////////////////////////
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -24,15 +82,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     return next(new AppError('No user created', 400));
   }
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    status: 'success',
-    token,
-    data: {
-      user: newUser,
-    },
-  });
+  createAndSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -51,19 +101,14 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) If everything ok, send token to client
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, 200, res);
 });
 
 ////////////////////////////////////
-// MIDDLEWARE
+// MIDDLEWARE for protected routes
 ////////////////////////////////////
 
-// Protect routes
+// PROTECT routes
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Get token and check if it exists
   let token;
@@ -98,25 +143,16 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('User recently changed password! Please log in again.', 401)
     );
   }
-  // GRANT ACCESS TO PROTECTED ROUTE
+  // grant access to protected route
   req.user = currentUser;
   next();
 });
 
-// Restrict access to certain roles
-exports.restrictTo =
-  (...roles) =>
-  (req, res, next) => {
-    // roles is an array of roles ['admin', 'lead-guide']
-    if (!roles.includes(req.user.role)) {
-      return next(
-        new AppError('You do not have permission to perform this action', 403)
-      );
-    }
-    next();
-  };
+////////////////////////////////////
+// MIDDLEWARE for logged-in users
+////////////////////////////////////
 
-// Forgot password
+// FORGOT password
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on POSTed email
   const user = await User.findOne({ email: req.body.email });
@@ -162,7 +198,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   });
 });
 
-// Reset password
+// RESET password
 exports.resetPassword = catchAsync(async (req, res, next) => {
   // 1) Get user based on the token
   const hashedToken = crypto
@@ -187,15 +223,10 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 4) Log user in, send JWT
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, 200, res);
 });
 
-// Update password (only for logged-in users)
+// UPDATE password (only for logged-in users)
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection by id (id will come from protect middleware)
   const user = await User.findById(req.user.id).select('+password');
@@ -212,10 +243,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.newPasswordConfirm;
   await user.save(); // need to use save as findByIdAndUpdate does not go through needed middleware
   // 4) Log user in, send JWT
-  const token = signToken(user._id);
-
-  res.status(200).json({
-    status: 'success',
-    token,
-  });
+  createAndSendToken(user, 200, res);
 });
