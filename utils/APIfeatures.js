@@ -65,7 +65,7 @@ class APIfeatures {
       this.query = this.query.select(fields);
     } else {
       // select all fields by default
-      this.query = this.query.select('title year _id');
+      this.query = this.query.select('_id');
     }
 
     return this;

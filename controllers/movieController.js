@@ -1,6 +1,6 @@
 const Movie = require('../models/movieModel');
-const APIfeatures = require('../utils/APIfeatures');
 
+const APIfeatures = require('../utils/APIfeatures');
 const catchAsync = require('../utils/asyncCatch');
 const AppError = require('../utils/appErrorClass');
 

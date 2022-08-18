@@ -6,62 +6,44 @@ const bycript = require('bcrypt');
 // MONGOOSE CONFIG
 
 // users schema
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, 'Name is required'],
-    },
-    email: {
-      type: String,
-      required: [true, 'Email is required'],
-      unique: [true, 'Email is already in use'],
-      lowercase: true,
-      validate: [validator.isEmail, 'Email is invalid'],
-    },
-    role: {
-      type: String,
-      enum: ['user', 'admin'],
-      default: 'user',
-    },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [8, 'Password must be at least 8 characters'],
-      select: false,
-    },
-    passwordConfirm: {
-      type: String,
-      required: [true, 'Password confirmation is required'],
-      validate: {
-        // this works only on save()
-        validator: function (el) {
-          return el === this.password;
-        },
-        message: 'Password confirmation does not match password',
-      },
-    },
-    photo: String,
-    passwordChangedAt: Date,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
+const userSchema = new mongoose.Schema({
+  userName: {
+    type: String,
+    required: [true, 'Name is required'],
   },
-  {
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
-    id: false,
-  }
-);
-
-////////////////////////////////////
-// VIRTUAL FIELDS
-////////////////////////////////////
-
-// virtual filed with comments
-userSchema.virtual('latestComments', {
-  ref: 'Comment',
-  foreignField: 'user_id',
-  localField: '_id',
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: [true, 'Email is already in use'],
+    lowercase: true,
+    validate: [validator.isEmail, 'Email is invalid'],
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
+  },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: [8, 'Password must be at least 8 characters'],
+    select: false,
+  },
+  passwordConfirm: {
+    type: String,
+    required: [true, 'Password confirmation is required'],
+    validate: {
+      // this works only on save()
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Password confirmation does not match password',
+    },
+  },
+  photo: String,
+  passwordChangedAt: Date,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
 
 ////////////////////////////////////

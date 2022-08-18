@@ -1,0 +1,81 @@
+[
+  {
+    "title": "No Time to Die",
+    "year": 2021,
+    "type": "Movie",
+    "locations": [
+      {
+        "type": "Point",
+        "coordinates": [60.0136271, 10.3140424],
+        "pointName": "Langvann"
+      },
+      {
+        "type": "Point",
+        "coordinates": [39.9928543, 15.6980614],
+        "pointName": "Spiaggia Cent'Ammari"
+      },
+      {
+        "type": "Point",
+        "coordinates": [40.0458569, 15.6416369],
+        "pointName": "Sapri"
+      },
+      {
+        "type": "Point",
+        "coordinates": [40.6667926, 16.6109848],
+        "pointName": "Cattedrale di Maria Santissima della Bruna e Sant'Eustachio"
+      }
+    ],
+    "genres": ["Adventure", "Action", "Thriller"]
+  },
+  {
+    "title": "I Care a Lot",
+    "year": 2021,
+    "type": "Movie",
+    "locations": [
+      {
+        "type": "Point",
+        "coordinates": [42.2967416, -71.2695915],
+        "pointName": "Babson Executive Conference Center"
+      },
+      {
+        "type": "Point",
+        "coordinates": [42.2490753, -71.1759261],
+        "pointName": "Norfolk County Registry of Deeds"
+      },
+      {
+        "type": "Point",
+        "coordinates": [42.2998513, -71.2881926],
+        "pointName": "490 Washington St"
+      }
+    ],
+    "genres": ["Comedy", "Drama", "Thriller", "Crime"]
+  },
+  {
+    "title": "1917",
+    "year": 2021,
+    "type": "Movie",
+    "locations": [
+      {
+        "type": "Point",
+        "coordinates": [51.7269444, -0.5433333],
+        "pointName": "Salisbury Plain"
+      },
+      {
+        "type": "Point",
+        "coordinates": [55.8615349, -4.3097432],
+        "pointName": "Govan"
+      },
+      {
+        "type": "Point",
+        "coordinates": [54.6465859, -2.1549242],
+        "pointName": "Low Force Waterfall"
+      },
+      {
+        "type": "Point",
+        "coordinates": [51.231682, -1.7991907],
+        "pointName": "Netheravon House"
+      }
+    ],
+    "genres": ["Comedy", "Drama", "Thriller", "Crime"]
+  }
+]

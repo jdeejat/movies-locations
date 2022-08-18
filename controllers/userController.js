@@ -12,7 +12,7 @@ const AppError = require('../utils/appErrorClass');
 // OPTION 1 get all users using normal callback function 
 exports.getAllUsers = (req, res) => {
   User.find({})
-    .select('userName email _id')
+    .select('name email _id')
     .exec((err, users) => {
       if (err) return res.status(500).send(err);
       res.status(200).send(users);
@@ -21,7 +21,7 @@ exports.getAllUsers = (req, res) => {
 // OPTION 2 get all users using .then()
 exports.getAllUsers = (req, res) => {
   User.find({})
-    .select('userName email _id')
+    .select('name email _id')
     .then((users) => {
       res.status(200).send(users);
     })
@@ -34,7 +34,7 @@ exports.getAllUsers = (req, res) => {
 // OPTION 3 get all users using async/await
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('userName email _id');
+    const users = await User.find({}).select('name email _id');
     res.status(200).json({
       status: 'success',
       results: users.length,
@@ -75,9 +75,16 @@ exports.createUser = (req, res) => {
 // :EMAIL route handler
 ////////////////////////////////////
 
+// GET ONE USER
+
 exports.getUser = (req, res) => {
-  User.findOne({ email: req.params.email })
-    .select('userName email _id')
+  User.findOne({ email: req.params.email ? req.params.email : req.user.email })
+    .select('name email _id')
+    .populate({
+      path: 'latestComments',
+      select: 'text date -user_id',
+      options: { limit: 10, sort: { date: -1 } },
+    })
     .exec((err, user) => {
       if (err)
         return res.status(500).json({
@@ -93,7 +100,7 @@ exports.getUser = (req, res) => {
     });
 };
 
-// update user userName and email
+// update user name and email
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 0) check if user sent password data
   if (req.body.password || req.body.passwordConfirm) {
@@ -106,7 +113,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // filter out unwanted fields from the request body
-  const filteredBody = { userName: req.body.userName, email: req.body.email };
+  const filteredBody = { name: req.body.name, email: req.body.email };
 
   // 1) get user from collection by id
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {

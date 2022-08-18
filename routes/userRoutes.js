@@ -6,38 +6,27 @@ const router = express.Router();
 
 router.route('/signup').post(authController.signup);
 router.route('/login').post(authController.login);
+router.route('/me').get(authController.protect, userController.getUser);
 
 router.route('/forgotPassword').post(authController.forgotPassword);
 router.route('/resetPassword/:token').patch(authController.resetPassword);
 
-router
-  .route('/updatePassword')
-  .patch(authController.protect, authController.updatePassword);
+// if all below routes need to be protected to auth users
+//can use router.use(authController.protect) because middleware is executed in sequence
+router.use(authController.protect);
 
-router
-  .route('/updateMe')
-  .patch(authController.protect, userController.updateMe);
+router.route('/updatePassword').patch(authController.updatePassword);
+router.route('/updateMe').patch(userController.updateMe);
 
-router
-  .route('/')
-  .get(
-    authController.protect,
-    authController.restrictTo('admin'),
-    userController.getAllUsers
-  );
+// only admin can access below routes
+router.use(authController.restrictTo('admin'));
+
+router.route('/').get(userController.getAllUsers);
 
 router
   .route('/:email')
-  .get(authController.protect, userController.getUser)
-  .patch(
-    authController.protect,
-    authController.restrictTo('admin'),
-    userController.updateUser
-  )
-  .delete(
-    authController.protect,
-    authController.restrictTo('admin'),
-    userController.deleteUser
-  );
+  .get(userController.getUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
 module.exports = router;

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+//////////////////////////////////////////////////
 // MONGOOSE CONFIG
+//////////////////////////////////////////////////
 
 // movies
 const movieSchema = new mongoose.Schema(
@@ -45,6 +47,18 @@ const movieSchema = new mongoose.Schema(
       type: String,
       // select: false, // will not return this field in the response but will throw 31254 error  and not allow exclusion inclusion togehter
     },
+    locations: [
+      {
+        type: {
+          type: String,
+          default: 'Point',
+          enum: ['Point'],
+        },
+        coordinates: [Number],
+        address: String,
+        pointName: String,
+      },
+    ],
     genres: [String],
     cast: [String],
   },
@@ -52,17 +66,23 @@ const movieSchema = new mongoose.Schema(
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+    id: false,
   }
 );
 
+//////////////////////////////////////////////////
 // VIRTUAL FIELDS
+//////////////////////////////////////////////////
 movieSchema.virtual('decade').get(function () {
   const substring = this.year.toString().substring(0, 3);
   const decade = substring.concat('0s');
   return decade;
 });
 
+//////////////////////////////////////////////////
 // DOCUMENT MIDDLEWARE
+//////////////////////////////////////////////////
+
 // BEFORE all update and save operations
 movieSchema.pre(
   [
@@ -91,7 +111,10 @@ movieSchema.post(
   }
 );
 
+//////////////////////////////////////////////////
 // QUERY MIDDLEWARE
+//////////////////////////////////////////////////
+
 // using regular expression for find* methods
 movieSchema.pre(/^find/, function (next) {
   this.find({ type: { $ne: 'dataLoad' } });
@@ -103,12 +126,18 @@ movieSchema.pre(/^find/, function (next) {
 //   next();
 // });
 
+//////////////////////////////////////////////////
 // AGGREGATION MIDDLEWARE
+//////////////////////////////////////////////////
 movieSchema.pre('aggregate', function (next) {
   // remove type dataLoad
   this.pipeline().unshift({ $match: { type: { $ne: 'dataLoad' } } });
   next();
 });
+
+//////////////////////////////////////////////////
+// MODEL
+//////////////////////////////////////////////////
 
 const Movie = mongoose.model('Movie', movieSchema);
 

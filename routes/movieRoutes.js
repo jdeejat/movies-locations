@@ -1,9 +1,13 @@
 const express = require('express');
 const movieController = require('../controllers/movieController');
+const commentRoutes = require('./commentRoutes');
 // alternative way to import with destructuring
 //const { getTenMovies } = require('./../controllers/movieController');
 
 const router = express.Router();
+
+// implementing nested routes
+router.use('/:movieId/comments', commentRoutes);
 
 router
   .route('/top-100-21')

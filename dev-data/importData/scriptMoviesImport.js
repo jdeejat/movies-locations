@@ -1,42 +1,15 @@
 require('dotenv').config({ path: '../../config.env' });
 const fs = require('fs');
 const mongoose = require('mongoose');
+const Movie = require('../../models/movieModel');
 
 mongoose.connect(process.env.DATABASE_URL);
 
 // MONGOOSE CONFIG
 
-// movies
-const movieSchema = new mongoose.Schema({
-  year: {
-    type: Number,
-    required: [true, 'Year is required'],
-  },
-  title: {
-    type: String,
-    required: [true, 'Title is required'],
-    trim: true,
-  },
-  type: {
-    type: String,
-    default: 'dataLoad',
-  },
-  lastupdated: {
-    type: Date,
-    default: Date.now(),
-  },
-  poster: {
-    type: String,
-    default: 'https://dummyimage.com/640x360/fff/aaa',
-  },
-  genres: [String],
-  cast: [String],
-});
-const Movie = mongoose.model('Movie', movieSchema);
-
 // read the file
 const moviesJSON = JSON.parse(
-  fs.readFileSync('./moviesDataForImport.json', 'utf-8')
+  fs.readFileSync('./moviesData2021.json', 'utf-8')
 );
 
 // import the data

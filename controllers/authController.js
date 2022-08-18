@@ -72,7 +72,7 @@ exports.restrictTo =
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
-    userName: req.body.userName,
+    name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,

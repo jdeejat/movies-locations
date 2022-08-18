@@ -14,6 +14,7 @@ const errorController = require('./controllers/errorController');
 // in app modules
 const movieRoutes = require('./routes/movieRoutes');
 const userRoutes = require('./routes/userRoutes');
+const commentRoutes = require('./routes/commentRoutes');
 
 ////////////////////////////////////
 //APP CONFIG
@@ -79,6 +80,7 @@ Second alternative is to use router middleware
 // MOUNT ROUTES
 app.use('/api/v1/movies', movieRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/comments', commentRoutes);
 
 ///////////////////////////////////////
 // ERROR handling
