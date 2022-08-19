@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+const Movie = require('./movieModel');
+
 // MONGOOSE CONFIG
 
-// users schema
-const userSchema = new mongoose.Schema(
+// comments schema
+const commentsSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -35,6 +37,10 @@ const userSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'User id is required'],
     },
+    rating: {
+      type: Number,
+      enum: [1, 2, 3, 4, 5],
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -42,6 +48,60 @@ const userSchema = new mongoose.Schema(
     id: false,
   }
 );
+
+////////////////////////////////////
+// INDEXES
+////////////////////////////////////
+
+// to make sure that each user can only comment once per movie
+// only works if there are no duplicates already in the database
+commentsSchema.index({ movie_id: 1, user_id: 1 }, { unique: true });
+
+////////////////////////////////////
+// STATIC METHODS
+////////////////////////////////////
+
+// calculate average rating for a movie
+commentsSchema.statics.calculateAverageRating = async function (movieId) {
+  // in static method this. refers to model
+  const obj = await this.aggregate([
+    {
+      $match: { movie_id: movieId },
+    },
+    {
+      $group: {
+        _id: '$movie_id',
+        averageRating: { $avg: '$rating' },
+        nuberOfRatings: { $sum: 1 },
+      },
+    },
+  ]);
+  if (obj.length > 0) {
+    await Movie.findByIdAndUpdate(movieId, {
+      commentsAvgRating: obj[0].averageRating,
+      commentsWithRatingCount: obj[0].nuberOfRatings,
+    });
+  } else {
+    await Movie.findByIdAndUpdate(movieId, {
+      commentsAvgRating: null,
+      commentsWithRatingCount: 0,
+    });
+  }
+};
+
+// call calculateAverageRating() on every comment create
+commentsSchema.post('save', async function () {
+  // this. points to current document
+  // but this.constructor points to model
+  await this.constructor.calculateAverageRating(this.movie_id);
+});
+
+// call calculateAverageRating() on every comment delete
+// delete is executed with query method. to get document from query use docs argument
+// eslint-disable-next-line prefer-arrow-callback
+commentsSchema.post(/^findOneAnd/, async function (doc) {
+  if (doc) await doc.constructor.calculateAverageRating(doc.movie_id);
+});
 
 ////////////////////////////////////
 // QUERY MIDDLEWARE
@@ -64,6 +124,6 @@ const userSchema = new mongoose.Schema(
 ////////////////////////////////////
 // Model
 ////////////////////////////////////
-const Comment = mongoose.model('Comment', userSchema);
+const Comment = mongoose.model('Comment', commentsSchema);
 
 module.exports = Comment;

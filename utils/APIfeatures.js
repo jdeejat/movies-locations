@@ -19,7 +19,7 @@ class APIfeatures {
       (match) => `$${match}`
     );
 
-    this.query = this.query.find(JSON.parse(queryStr)).limit(10);
+    this.query = this.query.find(JSON.parse(queryStr));
 
     return this;
   }

@@ -16,6 +16,8 @@ router
 router.route('/stats').get(movieController.getMovieStats);
 router.route('/stats/:year').get(movieController.getMovieStatsByYear);
 
+router.route('/:id').get(movieController.getOneMovie);
+
 router
   .route('/')
   .get(movieController.getMovies)

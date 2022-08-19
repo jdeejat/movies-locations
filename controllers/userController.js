@@ -82,7 +82,7 @@ exports.getUser = (req, res) => {
     .select('name email _id')
     .populate({
       path: 'latestComments',
-      select: 'text date -user_id',
+      select: 'text date rating movie_id -user_id',
       options: { limit: 10, sort: { date: -1 } },
     })
     .exec((err, user) => {

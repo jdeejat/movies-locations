@@ -59,6 +59,13 @@ const movieSchema = new mongoose.Schema(
         pointName: String,
       },
     ],
+    commentsWithRatingCount: Number,
+    commentsAvgRating: {
+      type: Number,
+      set: (val) => Math.round(val * 10) / 10, // round to 1 decimal place
+    },
+    runtime: Number,
+    metacritic: Number,
     genres: [String],
     cast: [String],
   },
@@ -69,6 +76,13 @@ const movieSchema = new mongoose.Schema(
     id: false,
   }
 );
+
+////////////////////////////////////
+// INDEXES
+////////////////////////////////////
+
+// run statistics with .examine() on the query and then add indexes
+movieSchema.index({ year: 1, runtime: 1 });
 
 //////////////////////////////////////////////////
 // VIRTUAL FIELDS

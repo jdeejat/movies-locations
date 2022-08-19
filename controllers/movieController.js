@@ -4,6 +4,8 @@ const APIfeatures = require('../utils/APIfeatures');
 const catchAsync = require('../utils/asyncCatch');
 const AppError = require('../utils/appErrorClass');
 
+const factory = require('./handlerFactory');
+
 //////////////////////////////////////////////////
 // ALIASES
 //////////////////////////////////////////////////
@@ -43,6 +45,7 @@ exports.getTenMovies = (req, res) => {
   //     console.log('Number of Movies:', count);
   //   });
 */
+exports.getOneMovie = factory.getOne(Movie);
 
 exports.getMovies = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
@@ -52,7 +55,7 @@ exports.getMovies = catchAsync(async (req, res, next) => {
     .sortQuery()
     .selectFields();
 
-  const movies = await features.query;
+  const movies = await features.query; // run stats with .explain()
 
   // SEND response
   res.status(200).json({
@@ -174,3 +177,9 @@ exports.getMovieStatsByYear = catchAsync(async (req, res, next) => {
     data: { stats },
   });
 });
+
+//////////////////////////////////////////////////
+// GEO HANDLERS
+//////////////////////////////////////////////////
+
+// 'locations.coordinates': {$geoWithin: { $centerSphere: [ [ 7.304534912109376, 50.6372220337556 ], 0.18963071132646298 ]}}}
