@@ -8,9 +8,7 @@ mongoose.connect(process.env.DATABASE_URL);
 // MONGOOSE CONFIG
 
 // read the file
-const moviesJSON = JSON.parse(
-  fs.readFileSync('./moviesData2021.json', 'utf-8')
-);
+const moviesJSON = JSON.parse(fs.readFileSync('./atlasMovies.json', 'utf-8'));
 
 // import the data
 const importData = async () => {

@@ -38,14 +38,8 @@ const movieSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    poster: {
-      type: String,
-      default: 'https://dummyimage.com/640x360/fff/aaa',
-      validate: [validator.isURL, 'Poster must be a valid URL'], // from npm validator
-    },
-    fullplot: {
-      type: String,
-      // select: false, // will not return this field in the response but will throw 31254 error  and not allow exclusion inclusion togehter
+    tmdb: {
+      type: Object,
     },
     locations: [
       {
@@ -64,10 +58,6 @@ const movieSchema = new mongoose.Schema(
       type: Number,
       set: (val) => Math.round(val * 10) / 10, // round to 1 decimal place
     },
-    runtime: Number,
-    metacritic: Number,
-    genres: [String],
-    cast: [String],
   },
   // options
   {
