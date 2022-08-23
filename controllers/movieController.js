@@ -183,3 +183,70 @@ exports.getMovieStatsByYear = catchAsync(async (req, res, next) => {
 //////////////////////////////////////////////////
 
 // 'locations.coordinates': {$geoWithin: { $centerSphere: [ [ 7.304534912109376, 50.6372220337556 ], 0.18963071132646298 ]}}}
+// /filmed-within/100/center/51.2466368,6.8236344/unit/km
+
+exports.getMoviesWithin = catchAsync(async (req, res, next) => {
+  const unit = req.query.unit || 'km';
+  const { distance, latlng } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitutde and longitude in the format lat,lng',
+        400
+      )
+    );
+  }
+  const movies = await Movie.find({
+    'locations.coordinates': {
+      $geoWithin: { $centerSphere: [[lng, lat], radius] },
+    },
+  });
+  res.status(200).json({
+    status: 'success',
+    results: movies.length,
+    data: { movies },
+  });
+});
+
+exports.getDistancesTo = catchAsync(async (req, res, next) => {
+  const unit = req.query.unit || 'km';
+  const { latlng } = req.params;
+  const [lat, lng] = latlng.split(',');
+
+  if (!lat || !lng) {
+    next(
+      new AppError(
+        'Please provide latitutde and longitude in the format lat,lng',
+        400
+      )
+    );
+  }
+
+  const distances = await Movie.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1],
+        },
+        distanceField: 'distance',
+        distanceMultiplier: unit === 'mi' ? 0.000621371 : 0.001,
+      },
+    },
+    {
+      $project: {
+        distance: 1,
+        title: 1,
+        //locations: 1,
+      },
+    },
+  ]);
+  res.status(200).json({
+    status: 'success',
+    //results: distance.length,
+    data: distances,
+  });
+});

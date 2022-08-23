@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
+//const validator = require('validator');
 
 //////////////////////////////////////////////////
 // MONGOOSE CONFIG
@@ -73,6 +73,8 @@ const movieSchema = new mongoose.Schema(
 
 // run statistics with .examine() on the query and then add indexes
 movieSchema.index({ year: 1, runtime: 1 });
+// for geospatial queries aggregations need index on locations.coordinates
+//movieSchema.index({ coordinates: '2dsphere' });
 
 //////////////////////////////////////////////////
 // VIRTUAL FIELDS
@@ -133,11 +135,11 @@ movieSchema.pre(/^find/, function (next) {
 //////////////////////////////////////////////////
 // AGGREGATION MIDDLEWARE
 //////////////////////////////////////////////////
-movieSchema.pre('aggregate', function (next) {
-  // remove type dataLoad
-  this.pipeline().unshift({ $match: { type: { $ne: 'dataLoad' } } });
-  next();
-});
+// movieSchema.pre('aggregate', function (next) {
+//   // remove type dataLoad
+//   this.pipeline().unshift({ $match: { type: { $ne: 'dataLoad' } } });
+//   next();
+// });
 
 //////////////////////////////////////////////////
 // MODEL
