@@ -2,6 +2,7 @@ require('dotenv').config({ path: '../config.env' });
 const mongoose = require('mongoose');
 const Comment = require('../models/commentModel');
 const User = require('../models/userModel');
+const Movie = require('../models/movieModel');
 
 mongoose.connect(process.env.DATABASE_URL);
 
@@ -9,6 +10,14 @@ const missingUsers = new Set();
 
 const linkUsersToComments = async () => {
   try {
+    // find all movies and console log set with titles
+    const movies = await Movie.find();
+    const moviesSet = new Set();
+    movies.forEach((movie) => {
+      moviesSet.add(movie.title);
+    });
+    console.log(moviesSet);
+
     // find comments where user_id is null
     const comments = await Comment.find({ user_id: null });
     console.log(`Found ${comments.length} comments with null user_id`);

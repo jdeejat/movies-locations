@@ -31,28 +31,46 @@ const handleJWTError = () => {
 // Prod vs Dev
 /////////////////////////////////////////
 
-const errorDev = function (err, res) {
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-    error: err,
-    stack: err.stack,
-  });
-};
-
-const errorProd = function (err, res) {
-  if (err.isOperational) {
+const errorDev = function (err, req, res) {
+  // API error response
+  if (req.originalUrl.startsWith('/api')) {
     res.status(err.statusCode).json({
       status: err.status,
       message: err.message,
+      error: err,
+      stack: err.stack,
     });
   } else {
-    // log error
-    console.error('ERR', err);
-    // send generic error message for unhandled errors
-    res.status(500).json({
-      status: 'error',
-      message: 'Something went very wrong',
+    // WEBSITE error response
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong during dev',
+      message: err.message,
+    });
+  }
+};
+
+const errorProd = function (err, req, res) {
+  // API error response
+  if (req.originalUrl.startsWith('/api')) {
+    if (err.isOperational) {
+      res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message,
+      });
+    } else {
+      // log error
+      console.error('ERR', err);
+      // send generic error message for unhandled errors
+      res.status(500).json({
+        status: 'error',
+        message: 'Something went very wrong',
+      });
+    }
+  } else {
+    // WEBSITE error response
+    res.status(err.statusCode).render('error', {
+      title: 'Something went wrong',
+      message: '404 Not Found',
     });
   }
 };
@@ -67,10 +85,15 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || 'error';
 
   if (process.env.NODE_ENV === 'development') {
-    errorDev(err, res);
+    errorDev(err, req, res);
   } else if (process.env.NODE_ENV === 'production') {
     // copy err object to error
-    let error = { ...err, name: err.name, code: err.code };
+    let error = {
+      ...err,
+      name: err.name,
+      code: err.code,
+      message: err.message,
+    };
 
     // checking different error types
     if (error.name === 'CastError') error = handleCastErrorDB(error);
@@ -84,6 +107,6 @@ module.exports = (err, req, res, next) => {
       error = handleJWTError();
 
     // sending error to the client
-    errorProd(error, res);
+    errorProd(error, req, res);
   }
 };

@@ -1,0 +1,84 @@
+extends index
+include _reviewCard
+block append head
+  script(crossorigin="anonymous", src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js')
+  link(crossorigin="anonymous", href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet')
+
+mixin overviewBox(label, text, icon)
+  .overview-box__detail
+    svg.overview-box__icon
+      use(xlink:href=`/img/icons.svg#icon-${icon}`)
+    span.overview-box__label= label
+    span.overview-box__text= text
+
+block content
+  section.section-header
+    .header__hero
+      .header__hero-overlay &nbsp;
+      img.card__picture-img(crossorigin="anonymous", src=movie.tmdb.poster, alt=`${movie.title}`)
+
+    .heading-box
+      h1.heading-primary
+        span= `${movie.title}`
+      .heading-box__group
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-clock')
+          span.heading-box__text= `Duration`
+        .heading-box__detail
+          svg.heading-box__icon
+            use(xlink:href='/img/icons.svg#icon-map-pin')
+          span.heading-box__text= `start location`
+
+  section.section-description
+    .overview-box
+      div
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Quick facts
+
+          - const date = new Date(movie.tmdb.releaseDate).toLocaleString('en-us', {month: 'long', year: 'numeric'})
+          +overviewBox('Release date', date, 'calendar')
+          +overviewBox('Comment rating', `${movie.ratingsAverage} / 5`, 'star')
+
+        .overview-box__group
+          h2.heading-secondary.ma-bt-lg Genres
+
+          each genre in tmdbMovie.genres
+            .overview-box__detail
+              //- img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.title}`)
+
+              //- - if (guide.role === 'lead-guide')
+              //-   span.overview-box__label Lead guide
+              //- - if (guide.role === 'guide')
+              //-   span.overview-box__label Tour guide
+              span.overview-box__text= genre.name
+
+    .description-box
+      h2.heading-secondary.ma-bt-lg= `About ${movie.title}`
+      - const parapraphs = movie.tmdb.overview.split('\n');
+      each p in parapraphs
+        p.description__text= p
+
+  section.section-pictures
+    each img, i in tmdbMovie.images
+      .picture-box
+        img.picture-box__img(crossorigin="anonymous", src=`https://image.tmdb.org/t/p/w500${img.file_path}`, alt=`backdrop ${i + 1}`, class=`picture-box__img--${i + 1}`)
+
+  section.section-map
+    #map(data-locations=`${JSON.stringify(movie.locations)}`)
+
+  section.section-reviews
+    .reviews
+      each comment in movie.latestComments
+        +reviewCard(comment)
+
+  //- section.section-cta
+  //-   .cta
+  //-     .cta__img.cta__img--logo
+  //-       img(src='/img/logo-white.png', alt='Natours logo')
+  //-     img.cta__img.cta__img--1(src=`/img/tours/${movie.images[1]}`, alt='Tour picture')
+  //-     img.cta__img.cta__img--2(src=`/img/tours/${movie.images[2]}`, alt='Tour picture')
+  //-     .cta__content
+  //-       h2.heading-secondary What are you waiting for?
+  //-       p.cta__text= `${movie.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+  //-       button.btn.btn--green.span-all-rows Book tour now!

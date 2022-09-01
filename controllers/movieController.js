@@ -10,11 +10,10 @@ const factory = require('./handlerFactory');
 // ALIASES
 //////////////////////////////////////////////////
 
-exports.aliasTop21 = (req, res, next) => {
-  req.query.limit = '100';
-  req.query.sort = 'year,-metacritic';
-  req.query.fields = 'title,year,poster,imdb,metacritic,plot,-_id';
-  req.query.year = { gte: '2000' };
+exports.aliasTop = (req, res, next) => {
+  req.query.limit = '10';
+  req.query.sort = 'lastupdated';
+  req.query.fields = 'title,year,type,tmdb,-_id';
   next();
 };
 

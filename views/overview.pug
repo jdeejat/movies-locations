@@ -1,0 +1,44 @@
+extends index
+
+block content
+  main.main
+    .card-container
+      each movie in movies
+        .card
+          .card__header
+            .card__picture
+              .card__picture-overlay &nbsp;
+              img.card__picture-img(crossorigin="anonymous", src=movie.tmdb.poster, alt=`${movie.title}`)
+            h3.heading-tertirary
+              span= movie.title
+
+          .card__details
+            h4.card__sub-heading= `Year: ${movie.year}`
+            p.card__text= movie.tmdb.overview
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-map-pin')
+              span= `${movie.locations.length} locations`
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-calendar')
+              span= new Date(movie.tmdb.releaseDate).toLocaleString('en-us', {month: 'long', year: 'numeric'})
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-flag')
+              span location
+            .card__data
+              svg.card__icon
+                use(xlink:href='/img/icons.svg#icon-user')
+              span= `${movie.type}`
+
+          .card__footer
+            p
+              span.card__footer-value= `${movie.tmdb.popularity}`
+              | 
+              span.card__footer-text popularity
+            p.card__ratings
+              span.card__footer-value= movie.tmdb.voteAverage
+              | 
+              span.card__footer-text= `vote Avg (${movie.tmdb.voteCount})`
+            a.btn.btn--green.btn--small(href=`/movie/${movie._id.toString()}`) Details

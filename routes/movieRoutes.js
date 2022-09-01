@@ -18,9 +18,7 @@ router
 router.route('/distances-to/:latlng').get(movieController.getDistancesTo);
 
 // alias routes
-router
-  .route('/top-100-21')
-  .get(movieController.aliasTop21, movieController.getMovies);
+router.route('/top').get(movieController.aliasTop, movieController.getMovies);
 
 // get  movies
 router.route('/:id').get(movieController.getOneMovie);

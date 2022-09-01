@@ -34,6 +34,9 @@ const movieSchema = new mongoose.Schema(
         message: '{VALUE} is not supported',
       },
     },
+    atlasLink: {
+      type: String,
+    },
     lastupdated: {
       type: Date,
       default: Date.now(),
@@ -49,7 +52,7 @@ const movieSchema = new mongoose.Schema(
           enum: ['Point'],
         },
         coordinates: [Number],
-        address: String,
+        googleMapsLink: String,
         pointName: String,
       },
     ],
@@ -83,6 +86,13 @@ movieSchema.virtual('decade').get(function () {
   const substring = this.year.toString().substring(0, 3);
   const decade = substring.concat('0s');
   return decade;
+});
+
+// virtual filed with comments
+movieSchema.virtual('latestComments', {
+  ref: 'Comment',
+  foreignField: 'movie_id',
+  localField: '_id',
 });
 
 //////////////////////////////////////////////////

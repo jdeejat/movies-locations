@@ -116,10 +116,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const filteredBody = { name: req.body.name, email: req.body.email };
 
   // 1) get user from collection by id
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     new: true,
     runValidators: true,
   });
+
+  if (!updatedUser) {
+    return next(new AppError('No user found with that ID', 404));
+  }
+
   // 4) send response
   res.status(200).json({
     status: 'success',
