@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 //security
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -36,6 +37,17 @@ app.set('views', path.join(__dirname, 'views')); // instead of `${__dirname}/vie
 ////////////////////////////////////
 // MIDDLEWARE
 ////////////////////////////////////
+
+// CORS - Cross Origin Resource Sharing
+app.use(cors());
+// Access-Control-Allow-Origin *
+// if you want to allow only certain domains
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }));
+
+// to allow complex requests like PATCH, DELETE
+app.options('*', cors());
 
 // HELMET - set security HTTP headers
 
