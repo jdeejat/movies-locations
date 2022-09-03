@@ -21,7 +21,8 @@ mongoose
 //console.log(process.env); // to see all the environment variables
 
 // START SERVER
-const server = app.listen(3000, () => {
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.log('Server is running on port 3000');
 });
