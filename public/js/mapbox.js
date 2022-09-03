@@ -6,7 +6,7 @@ export const initMapbox = (locations) => {
   const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/jdeejat/cl7d83jn6001714qi5lbncigi', // style URL
-    //scrollZoom: false,
+    scrollZoom: false,
     //   center: [-74.5, 40], // starting position [lng, lat]
     //   zoom: 9, // starting zoom
     //   projection: 'globe', // display the map as a 3D globe
