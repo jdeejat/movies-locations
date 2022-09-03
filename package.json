@@ -8,7 +8,7 @@
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.js --dist-dir ./public/js/bundle",
-    "build:js": "parcel build"
+    "build:js": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle"
   },
   "targets": {
     "main": false
@@ -26,6 +26,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.25.0",
     "dotenv": "^16.0.1",
@@ -37,8 +38,10 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.7.8",
     "pug": "^3.0.2",
+    "sharp": "^0.30.7",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
   },

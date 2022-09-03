@@ -1,18 +1,12 @@
 /* eslint-disable */
 import { showAlert } from './alert';
 
-export const userChange = async (email, name) => {
+export const userChange = async (form, name) => {
   // Send a POST request
-  const request = await fetch('http://localhost:3000/api/v1/users/updateMe', {
+  // dev url http://localhost:3000/api/v1/users/updateMe
+  const request = await fetch('/api/v1/users/updateMe', {
     method: 'PATCH',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      name,
-    }),
+    body: form,
   });
   const response = await request.json();
   if (response.status === 'success') {
@@ -29,21 +23,18 @@ export const passwordChange = async (
   newPasswordConfirm
 ) => {
   // Send a POST request
-  const request = await fetch(
-    'http://localhost:3000/api/v1/users/updatePassword',
-    {
-      method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        currentPassword,
-        newPassword,
-        newPasswordConfirm,
-      }),
-    }
-  );
+  const request = await fetch('/api/v1/users/updatePassword', {
+    method: 'PATCH',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      currentPassword,
+      newPassword,
+      newPasswordConfirm,
+    }),
+  });
   const response = await request.json();
   if (response.status === 'success') {
     // show alert

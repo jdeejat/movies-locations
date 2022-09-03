@@ -1,11 +1,54 @@
+const multer = require('multer');
+const sharp = require('sharp');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/asyncCatch');
 const AppError = require('../utils/appErrorClass');
 
-// USER HANDLERS
+////////////////////////////////////
+// Multer setup
+////////////////////////////////////
+// multer storage when no need to preprocess image
+// const multerStorage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, 'public/img/users');
+//   },
+//   filename: (req, file, cb) => {
+//     // user-userId-timestamp.jpeg
+//     const ext = file.mimetype.split('/')[1];
+//     cb(null, `user-${req.user._id}.${ext}`);
+//   },
+// });
+
+// multer storage when need to resize image
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('You uploaded not an image.', 400), false);
+  }
+};
+// User photo upload using multer
+exports.uploadUserPhoto = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+}).single('photo');
+
+exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
+  if (!req.file) return next();
+  req.file.filename = `user-${req.user._id}.jpeg`;
+  await sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/users/${req.file.filename}`);
+  next();
+});
 
 ////////////////////////////////////
 // MAIN route handler
+// USER HANDLERS
 ////////////////////////////////////
 
 /*
@@ -114,6 +157,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
   // filter out unwanted fields from the request body
   const filteredBody = { name: req.body.name, email: req.body.email };
+  if (req.file) filteredBody.photo = req.file.filename;
 
   // 1) get user from collection by id
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {

@@ -6,7 +6,7 @@ import { showAlert } from './alert';
 
 export const logout = async () => {
   // Send a POST request
-  const request = await fetch('http://localhost:3000/api/v1/users/logout', {
+  const request = await fetch('/api/v1/users/logout', {
     method: 'GET',
     headers: {
       Accept: 'application/json',

@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 //security
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -124,6 +125,9 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
+
+// COMPRESSION - compress text sent to client
+app.use(compression());
 
 ////////////////////////////////////
 // ROUTES

@@ -6,7 +6,7 @@ import { showAlert } from './alert';
 
 export const login = async (email, password) => {
   // Send a POST request
-  const request = await fetch('http://localhost:3000/api/v1/users/login', {
+  const request = await fetch('/api/v1/users/login', {
     method: 'POST',
     headers: {
       Accept: 'application/json',

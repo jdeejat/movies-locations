@@ -32,7 +32,7 @@ body {
   font-weight: 300;
   font-family: 'Lato', sans-serif;
   color: #777;
-  padding: 3rem;
+  padding: 1rem;
   min-height: 100vh;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -299,7 +299,7 @@ body {
 }
 
 .header {
-  background-color: #1a1919;
+  background-color: #292f36;
   background-color: ;
   padding: 0 5rem;
   height: 8rem;
@@ -801,7 +801,7 @@ body {
 }
 
 .footer {
-  background-color: #1a1919;
+  background-color: #292f36;
   padding: 6rem 4rem 3rem 4rem;
   font-size: 1.4rem;
   display: grid;

@@ -122,7 +122,7 @@ movieSchema.post(
   // eslint-disable-next-line prefer-arrow-callback
   function (doc, next) {
     // eslint-disable-next-line no-console
-    console.log('Deleted movie: ', doc);
+    //console.log('Deleted movie: ', doc);
     next();
   }
 );
