@@ -25,6 +25,8 @@ const viewRoutes = require('./routes/viewRoutes');
 ////////////////////////////////////
 
 const app = express();
+// for heroku deployment need to trust proxy
+app.enable('trust proxy');
 // EXPRESS - serving static files
 app.use(express.static(path.join(__dirname, 'public'))); // __dirname is a global variable that holds the current directory. `${__dirname}/public`
 // Usu pug
