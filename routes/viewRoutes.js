@@ -15,5 +15,6 @@ router.get('/', viewController.getOverview);
 router.get('/movie/:id', viewController.getMovie);
 // login & signup page
 router.get('/login', viewController.login);
+router.get('/signup', viewController.signup);
 
 module.exports = router;

@@ -63,6 +63,13 @@ exports.login = (req, res) => {
   });
 };
 
+// Signup page
+exports.signup = (req, res) => {
+  res.status(200).render('signup', {
+    title: 'Sign up',
+  });
+};
+
 // Account page
 exports.getAccount = (req, res) => {
   res.status(200).render('account', {

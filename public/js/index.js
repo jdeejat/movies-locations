@@ -1,6 +1,7 @@
 /* eslint-disable */
 import 'core-js/stable';
 import { login } from './login';
+import { signup } from './signup';
 import { logout } from './logout';
 import { initMapbox } from './mapbox';
 import { userChange, passwordChange } from './changeAccount';
@@ -8,6 +9,7 @@ import { userChange, passwordChange } from './changeAccount';
 // DOM elements
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const signupForm = document.querySelector('.form--signup');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
@@ -28,8 +30,21 @@ if (loginForm)
     login(email, password);
   });
 
-// add event listener to the .nav__el--logout element
-if (logoutBtn) logoutBtn.addEventListener('click', logout);
+// sign up
+if (signupForm)
+  signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // get name email password and passwordConfirm by id
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+    signup(name, email, password, passwordConfirm);
+  });
+
+if (logoutBtn)
+  // add event listener to the .nav__el--logout element
+  logoutBtn.addEventListener('click', logout);
 
 // add event listener to the .form-user-data element
 if (userDataForm)
