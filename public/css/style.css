@@ -896,14 +896,13 @@ body {
   -ms-flex: 0 1 40%;
   flex: 0 1 40%;
 }
-@media only screen and (max-width: 62.5em) {
+
+@media only screen and (max-width: 380px) {
   .nav--tours {
     margin-bottom: 1.5rem;
   }
-  .nav__el {
-    font-size: 0.5rem;
-  }
 }
+
 @media only screen and (max-width: 37.5em) {
   .nav--tours {
     margin-bottom: 0;
@@ -947,6 +946,7 @@ body {
 .nav__el:not(:last-child) {
   margin-right: 3rem;
 }
+
 @media only screen and (max-width: 37.5em) {
   .nav__el:not(:last-child) {
     margin-right: 0;
@@ -956,12 +956,19 @@ body {
 .nav__el:focus {
   outline: none;
 }
+
 .nav__el--cta {
   padding: 1rem 3rem;
   border-radius: 10rem;
   border: 1px solid currentColor !important;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+}
+@media only screen and (max-width: 380px) {
+  .nav__el--cta {
+    padding: 0rem 1rem;
+    border-radius: 5rem;
+  }
 }
 .nav__el--cta:hover {
   background-color: #f7f7f7;
