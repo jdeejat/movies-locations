@@ -42,3 +42,6 @@ block content
               | 
               span.card__footer-text= `vote Avg (${movie.tmdb.voteCount})`
             a.btn.btn--green.btn--small(href=`/movie/${movie._id.toString()}`) Details
+    
+    .button-container
+      a#load-more(data-page=1).btn.btn-medium Load More

@@ -1,5 +1,6 @@
 const multer = require('multer');
 const sharp = require('sharp');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const User = require('../models/userModel');
 const catchAsync = require('../utils/asyncCatch');
 const AppError = require('../utils/appErrorClass');
@@ -227,3 +228,31 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
+
+////////////////////////////////////
+// STRIPE
+////////////////////////////////////
+
+// get stripe session for tip
+exports.getStripeSession = catchAsync(async (req, res, next) => {
+  // 1) create checkout session
+  const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
+    success_url: `${req.protocol}://${req.get('host')}/?tip=true`,
+    cancel_url: `${req.protocol}://${req.get('host')}/`,
+    customer_email: req.user.email,
+    client_reference_id: `${req.user.email}-${Date.now()}`,
+    line_items: [
+      {
+        quantity: 1,
+        price: 'price_1LeNQOCEWMPVSCkh1HGqvxFT',
+      },
+    ],
+  });
+
+  // 2) create session as response
+  res.status(200).json({
+    status: 'success',
+    session,
+  });
+});

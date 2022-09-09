@@ -5,6 +5,7 @@ import { signup } from './signup';
 import { logout } from './logout';
 import { initMapbox } from './mapbox';
 import { userChange, passwordChange } from './changeAccount';
+import { loadMore } from './loadMore';
 
 // DOM elements
 const mapBox = document.getElementById('map');
@@ -13,6 +14,7 @@ const signupForm = document.querySelector('.form--signup');
 const logoutBtn = document.querySelector('.nav__el--logout');
 const userDataForm = document.querySelector('.form-user-data');
 const userPasswordForm = document.querySelector('.form-user-password');
+const loadMoreBtn = document.getElementById('load-more');
 
 // INITIALIZE MAPBOX
 if (mapBox) {
@@ -78,3 +80,17 @@ if (userPasswordForm)
     document.getElementById('password').value = '';
     document.getElementById('password-confirm').value = '';
   });
+
+// load more
+if (loadMoreBtn) {
+  loadMoreBtn.addEventListener('click', async () => {
+    const loadPage = loadMoreBtn.dataset.page * 1 + 1;
+    const moreMovies = await loadMore(loadPage);
+    // insert data into the DOM card-container
+    document
+      .querySelector('.card-container')
+      .insertAdjacentHTML('beforeend', moreMovies);
+    // increment page number
+    loadMoreBtn.dataset.page = loadPage;
+  });
+}

@@ -24,6 +24,11 @@ router
     userController.resizeUserPhoto,
     userController.updateMe
   );
+////////////////////////////////////
+// STRIPE tip
+////////////////////////////////////
+
+router.get('/checkout-session', userController.getStripeSession);
 
 // only admin can access below routes
 router.use(authController.restrictTo('admin'));
