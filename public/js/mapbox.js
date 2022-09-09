@@ -5,8 +5,10 @@ export const initMapbox = (locations) => {
     'pk.eyJ1IjoiamRlZWphdCIsImEiOiJjbDdkN3J5bncwazhvM3ZvbDJ3Mjl3dGh2In0.MqeSMRvJZuR5gu7Ndwww-A';
   const map = new mapboxgl.Map({
     container: 'map', // container ID
-    style: 'mapbox://styles/jdeejat/cl7d83jn6001714qi5lbncigi', // style URL
+    style: 'mapbox://styles/jdeejat/cj20he7w700402rmjs5zfkwlj', // style URL
     // scrollZoom: false,
+    cooperativeGestures: true,
+
     //   center: [-74.5, 40], // starting position [lng, lat]
     //   zoom: 9, // starting zoom
     //   projection: 'globe', // display the map as a 3D globe
@@ -16,6 +18,7 @@ export const initMapbox = (locations) => {
   map.on('style.load', () => {
     map.setFog({}); // Set the default atmosphere style
   });
+  map.addControl(new mapboxgl.FullscreenControl());
 
   const bounds = new mapboxgl.LngLatBounds();
 
@@ -30,15 +33,21 @@ export const initMapbox = (locations) => {
       anchor: 'bottom',
     })
       .setLngLat(loc.coordinates)
-      .addTo(map);
-
-    // add popup
-    new mapboxgl.Popup({ offset: 25 })
-      .setLngLat(loc.coordinates)
-      .setHTML(
-        `<a href='${loc.googleMapsLink}' target="_blank">${loc.pointName}</a>`
+      .setPopup(
+        new mapboxgl.Popup({ offset: 25 }) // add popups
+          .setHTML(
+            `<a href='${loc.googleMapsLink}' target="_blank">${loc.pointName}</a>`
+          )
       )
       .addTo(map);
+
+    // add popup OLD
+    // new mapboxgl.Popup({ offset: 25 })
+    //   .setLngLat(loc.coordinates)
+    //   .setHTML(
+    //     `<a href='${loc.googleMapsLink}' target="_blank">${loc.pointName}</a>`
+    //   )
+    //   .addTo(map);
 
     // extend map bounds to include current location
     bounds.extend(loc.coordinates);
