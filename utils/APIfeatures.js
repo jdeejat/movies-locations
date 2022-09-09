@@ -31,7 +31,7 @@ class APIfeatures {
       this.query = this.query.sort(sortBy);
     } else {
       // sort is set to year: 1 by default. Mongoose > Query.prototype.sort()
-      this.query = this.query.sort('year');
+      this.query = this.query.sort('lastupdated');
     }
 
     return this;
