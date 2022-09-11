@@ -12,8 +12,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
   // 1) Get data from movie model
   const features = new APIfeatures(Movie.find(), req.query)
     .filterOnFields()
-    .paginate()
-    .sortQuery();
+    .paginate();
 
   const movies = await features.query;
 
