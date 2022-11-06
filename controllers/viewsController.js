@@ -1,3 +1,4 @@
+const fetch = require('node-fetch');
 const catchAsync = require('../utils/asyncCatch');
 const Movie = require('../models/movieModel');
 const AppError = require('../utils/appErrorClass');
