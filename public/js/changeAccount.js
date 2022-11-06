@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { showAlert } from './alert';
+import fetch from 'node-fetch';
 
 export const userChange = async (form, name) => {
   // Send a POST request
