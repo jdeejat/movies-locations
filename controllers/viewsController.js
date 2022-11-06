@@ -48,22 +48,22 @@ exports.getMovie = catchAsync(async (req, res, next) => {
     return next(new AppError('No movie found with that ID', 404));
   }
 
-  //2) get data from TMDB api
-  const request = await fetch(
-    `https://api.themoviedb.org/3/movie/${movie.tmdb.id}?api_key=${process.env.TMDB_API_KEY}`
-  );
-  const tmdbMovie = await request.json();
-  // get images from TMDB api
-  const request2 = await fetch(
-    `https://api.themoviedb.org/3/movie/${movie.tmdb.id}/images?api_key=${process.env.TMDB_API_KEY}`
-  );
-  const images = await request2.json();
-  tmdbMovie.images = images.backdrops.slice(1, 4);
+  // //2) get data from TMDB api
+  // const request = await fetch(
+  //   `https://api.themoviedb.org/3/movie/${movie.tmdb.id}?api_key=${process.env.TMDB_API_KEY}`
+  // );
+  // const tmdbMovie = await request.json();
+  // // get images from TMDB api
+  // const request2 = await fetch(
+  //   `https://api.themoviedb.org/3/movie/${movie.tmdb.id}/images?api_key=${process.env.TMDB_API_KEY}`
+  // );
+  // const images = await request2.json();
+  // tmdbMovie.images = images.backdrops.slice(1, 4);
 
   res.status(200).render('movie', {
     title: movie.title,
     movie,
-    tmdbMovie,
+    // tmdbMovie,
   });
 });
 
