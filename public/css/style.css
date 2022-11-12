@@ -247,7 +247,7 @@ body {
 }
 
 .btn--small {
-  padding: 1.25rem 3rem !important;
+  padding: 1.25rem !important;
   font-size: 1.4rem !important;
 }
 
@@ -1129,22 +1129,29 @@ body {
 }
 
 .card-container {
-  max-width: 120rem;
-  margin: 5rem auto;
+  max-width: 130rem;
+  margin: 2rem auto;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 7rem;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 5rem;
 }
 
-/* when screensize is below 1200 card-container has 2 columns */
-@media (max-width: 1200px) {
+/* when screensize is below 1100 card-container has 2 columns */
+@media (max-width: 1250px) {
+  .card-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* when screensize is below 1100 card-container has 2 columns */
+@media (max-width: 940px) {
   .card-container {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* when screensize is below 900 card-container has 1 column */
-@media (max-width: 900px) {
+/* when screensize is below 550 card-container has 1 column */
+@media (max-width: 640px) {
   .card-container {
     grid-template-columns: repeat(1, 1fr);
   }
@@ -1173,9 +1180,9 @@ body {
 }
 .card__picture {
   position: relative;
-  -webkit-clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
+  /* -webkit-clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
   clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
-  height: 22rem;
+  height: 50rem; */
 }
 .card__picture-overlay {
   position: absolute;
@@ -1202,7 +1209,7 @@ body {
   grid-template-columns: 1fr 1fr;
   grid-row-gap: 1.75rem;
   grid-column-gap: 2rem;
-  padding: 2.5rem 3rem;
+  padding: 2rem;
 }
 .card__sub-heading {
   font-size: 1.2rem;
@@ -1236,7 +1243,7 @@ body {
 }
 .card__footer {
   background-color: #f7f7f7;
-  padding: 2.5rem 3rem;
+  padding: 2rem;
   border-top: 1px solid #f1f1f1;
   font-size: 1.4rem;
   display: grid;

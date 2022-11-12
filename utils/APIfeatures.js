@@ -50,7 +50,7 @@ class APIfeatures {
 
   paginate() {
     const page = this.queryString.page * 1 || 1; // page is set to 1 by default
-    const limit = this.queryString.limit * 1 || 9; // limit is set to 10 by default
+    const limit = this.queryString.limit * 1 || 12; // limit is set to 10 by default
     const skip = (page - 1) * limit;
 
     this.query = this.query.skip(skip).limit(limit);
