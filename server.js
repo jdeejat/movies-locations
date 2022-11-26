@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './config.env' });
+require('dotenv').config({ path: './secrets.env' });
 const mongoose = require('mongoose');
 
 process.on('uncaughtException', (err) => {
