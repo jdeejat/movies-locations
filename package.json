@@ -9,7 +9,7 @@
     "prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.js --dist-dir ./public/js/bundle",
-    "parcelBuild": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle"
+    "build:js": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle"
   },
   "targets": {
     "main": false
@@ -46,6 +46,18 @@
     "stripe": "^11.3.0",
     "validator": "^13.7.0",
     "xss-clean": "^0.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
+    "parcel": "^2.8.1",
+    "prettier": "^2.8.1"
   },
   "engines": {
     "node": ">=18.0.0"
