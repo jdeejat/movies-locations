@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { showAlert } from './alert';
-import fetch from 'node-fetch';
 
 // // TESTING DOM elements
 // const loginForm = document.querySelector('.form');

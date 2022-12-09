@@ -13,9 +13,11 @@ If you use multiple connections, you should make sure you export schemas, not mo
 use below to connect to multiple databases
 const mov = mongoose.createConnection(`${process.env.DATABASE_URL}`);
 */
+mongoose.set('strictQuery', true);
 mongoose
   .connect(process.env.DATABASE_URL)
   .then(() => console.log('DB connection successful'));
+
 //.catch((err) => console.log("DB connection error")); // this will work for small application
 
 //console.log(process.env); // to see all the environment variables
