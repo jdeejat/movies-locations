@@ -1,5 +1,5 @@
 /* eslint-disable */
-import 'core-js/stable';
+//import 'core-js/stable';
 import { login } from './login';
 import { signup } from './signup';
 import { logout } from './logout';
