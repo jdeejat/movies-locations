@@ -9,7 +9,7 @@
     "prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.js --dist-dir ./public/js/bundle",
-    "build": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle"
+    "parcelBuild": "parcel build ./public/js/index.js --dist-dir ./public/js/bundle"
   },
   "targets": {
     "main": false
