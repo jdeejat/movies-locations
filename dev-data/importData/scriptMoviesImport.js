@@ -1,8 +1,9 @@
-require('dotenv').config({ path: '../../config.env' });
+require('dotenv').config({ path: '../../secrets.env' });
 const fs = require('fs');
 const mongoose = require('mongoose');
 const Movie = require('../../models/movieModel');
 
+mongoose.set('strictQuery', true);
 mongoose.connect(process.env.DATABASE_URL);
 
 // MONGOOSE CONFIG
